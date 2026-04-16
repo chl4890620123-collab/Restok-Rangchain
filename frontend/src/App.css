@@ -1,0 +1,198 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+:root {
+  /* 프리미엄 SaaS 스타일의 세련된 컬러 파레트 */
+  --primary: #FF6B00; /* 트렌디하고 선명한 오렌지 */
+  --primary-light: #FFF2EB; /* 아주 부드러운 오렌지 배경 */
+  --bg-color: #F4F7F9; /* 차갑고 깔끔한 라이트 그레이 */
+  --text-main: #191B1D; /* 완전 검정이 아닌 세련된 다크 그레이 */
+  --text-sub: #828C94;
+  --sidebar-width: 260px;
+  --card-radius: 24px;
+  --btn-radius: 14px;
+  --shadow-base: 0 10px 30px rgba(0, 0, 0, 0.03);
+  --shadow-hover: 0 12px 40px rgba(255, 107, 0, 0.12);
+}
+
+
+/* 자연스러운 전환을 위한 글로벌 트랜지션 */
+body, .sidebar, .carrot-card, .main-content, .nav-link, .form-control, .bg-light, .bg-white, .table, th, td { 
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease; 
+}
+
+/* 자연스러운 전환을 위한 글로벌 트랜지션 (색상 변할 때 깜빡이지 않고 부드럽게) */
+body, .sidebar, .carrot-card, .main-content, .nav-link, .form-control, .bg-light, .bg-white, .table, th, td { 
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease; 
+}
+
+body { 
+  background-color: var(--bg-color); 
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; 
+  color: var(--text-main);
+  letter-spacing: -0.3px;
+}
+
+.app-container { display: flex; min-height: 100vh; }
+
+/* 💎 사이드바: 선을 없애고 그림자와 여백으로만 구분하는 모던 스타일 */
+.sidebar {
+  width: var(--sidebar-width);
+  background: white;
+  border-right: none;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.02);
+  padding: 40px 24px;
+  position: fixed; 
+  height: 100vh;
+  z-index: 1000;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logo h2 { 
+  color: var(--primary); 
+  font-weight: 800; 
+  letter-spacing: -1px;
+}
+
+/* 네비게이션 메뉴: 둥글고 부드러운 호버 효과 */
+.nav-link {
+  color: var(--text-sub); 
+  padding: 14px 18px; 
+  border-radius: var(--btn-radius);
+  margin-bottom: 8px; 
+  font-weight: 600; 
+  text-decoration: none; 
+  display: block;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--text-main);
+  background: rgba(0,0,0,0.02);
+  transform: translateX(4px);
+}
+
+.nav-link.active { 
+  background: var(--primary-light); 
+  color: var(--primary); 
+  font-weight: 700;
+}
+
+/* 💎 메인 컨텐츠 영역 */
+.main-content {
+  flex: 1; 
+  padding: 50px;
+  transition: all 0.3s ease;
+}
+
+/* 카드 뷰: 테두리 없이 깊이감 있는 둥근 그림자 스타일 */
+.carrot-card {
+  background: white; 
+  border-radius: var(--card-radius); 
+  padding: 30px;
+  box-shadow: var(--shadow-base); 
+  border: 1px solid rgba(0,0,0,0.01) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease;
+}
+
+[data-theme="dark"] .sidebar { background-color: #191C20 !important; border-color: #2D3748 !important; }
+[data-theme="dark"] .carrot-card, 
+[data-theme="dark"] .bg-white, 
+[data-theme="dark"] .bg-light,
+[data-theme="dark"] .card { 
+  background-color: #1E2126 !important; 
+  color: var(--text-main) !important;
+  border-color: #2D3748 !important;
+}
+[data-theme="dark"] .table-light th, [data-theme="dark"] thead th {
+  background-color: #2D3748 !important; color: var(--text-main) !important;
+}
+[data-theme="dark"] .form-control, [data-theme="dark"] .form-select, [data-theme="dark"] .input-group-text {
+  background-color: #2D3748 !important; border-color: #4A5568 !important; color: white !important;
+}
+
+.carrot-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* 버튼: 애플/토스 느낌의 볼드하고 둥근 버튼 */
+.btn-carrot, .btn-primary {
+  background-color: var(--primary) !important; 
+  border: none !important; 
+  color: white !important;
+  font-weight: 700 !important; 
+  border-radius: var(--btn-radius) !important; 
+  padding: 14px 24px !important;
+  transition: all 0.2s ease;
+}
+
+.btn-carrot:hover, .btn-primary:hover { 
+  background-color: #E66000 !important; 
+  box-shadow: 0 6px 20px rgba(255, 107, 0, 0.2) !important;
+  transform: translateY(-2px);
+}
+
+/* 테이블 깔끔하게 */
+.table {
+  --bs-table-bg: transparent;
+  color: var(--text-main);
+}
+.table-light th {
+  background-color: #F8FAFC !important;
+  color: var(--text-sub);
+  font-weight: 600;
+  border-bottom: none;
+  padding: 16px;
+}
+.table td {
+  padding: 16px;
+  vertical-align: middle;
+  border-bottom: 1px solid #F0F2F5;
+}
+
+/* 폼 인풋 (입력창) 디자인 */
+.form-control, .form-select {
+  border-radius: var(--btn-radius) !important;
+  border: 1px solid #E2E8F0 !important;
+  padding: 12px 16px !important;
+  background-color: #F8FAFC !important;
+  transition: all 0.2s;
+  box-shadow: none !important;
+}
+.form-control:focus, .form-select:focus {
+  background-color: white !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 4px var(--primary-light) !important;
+}
+
+/* 모바일/태블릿 반응형 UI */
+@media (max-width: 992px) {
+  .app-container { flex-direction: column; }
+  
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  }
+  
+  .sidebar .flex-column {
+    flex-direction: row !important;
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 12px !important;
+    padding-bottom: 10px;
+  }
+  
+  .sidebar-logo { margin-bottom: 15px !important; text-align: center; }
+  .sidebar-footer { display: none; }
+  
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 20px;
+  }
+}

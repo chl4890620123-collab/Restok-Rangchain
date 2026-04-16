@@ -1,0 +1,119 @@
+/* 컨테이너 설정 */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #e0e5ec; /* 뉴모피즘 배경색 */
+}
+
+/* 메인 카드 스타일 */
+.signupCard {
+    width: 100%;
+    max-width: 450px;
+    border: none !important;
+    border-radius: 30px !important;
+    background: #e0e5ec !important;
+    box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+    overflow: hidden;
+    padding: 20px;
+}
+
+/* 상단 포인트 바 */
+.topBar {
+    height: 6px;
+    background: linear-gradient(90deg, #ff8a3d, #ff4d4d);
+    border-radius: 10px;
+    margin: 10px 20px 0;
+}
+
+.cardBody {
+    padding: 2.5rem 2rem !important;
+}
+
+/* 헤더 부분 */
+.header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.title {
+    font-weight: 800;
+    color: #444;
+    letter-spacing: -1px;
+    margin-bottom: 5px;
+}
+
+/* 입력 필드 라벨 */
+.label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #666;
+    margin-left: 10px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+/* 뉴모피즘 입력창 (Inset 효과) */
+.inputField {
+    border: none !important;
+    border-radius: 15px !important;
+    padding: 12px 20px !important;
+    background: #e0e5ec !important;
+    box-shadow: inset 6px 6px 12px #d1d9e6, inset -6px -6px 12px #ffffff !important;
+    color: #444 !important;
+    transition: all 0.3s ease;
+}
+
+.inputField:focus {
+    outline: none !important;
+    box-shadow: inset 2px 2px 5px #d1d9e6, inset -2px -2px 5px #ffffff !important;
+}
+
+/* 메인 가입 버튼 */
+.submitButton {
+    width: 100%;
+    border: none !important;
+    border-radius: 15px !important;
+    padding: 14px !important;
+    font-weight: 700 !important;
+    margin-top: 10px;
+    background: #e0e5ec !important;
+    color: #ff8a3d !important;
+    box-shadow: 6px 6px 12px #d1d9e6, -6px -6px 12px #ffffff !important;
+    transition: all 0.2s ease !important;
+}
+
+.submitButton:hover:not(:disabled) {
+    color: #ff4d4d !important;
+    box-shadow: 2px 2px 5px #d1d9e6, -2px -2px 5px #ffffff !important;
+    transform: translateY(1px);
+}
+
+.submitButton:active:not(:disabled) {
+    box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff !important;
+}
+
+.submitButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 하단 링크 스타일 */
+.loginLink {
+    text-decoration: none !important;
+    color: #777 !important;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.highlightText {
+    color: #ff8a3d;
+    font-weight: 700;
+    margin-left: 5px;
+}
+
+.loginLink:hover .highlightText {
+    color: #ff4d4d;
+    text-decoration: underline;
+}

@@ -1,0 +1,180 @@
+/* src/pages/Dashboard.module.css */
+
+/* 1. 배경 및 전체 컨테이너 - 시각적 깊이감 추가 */
+.dashboardContainer {
+    background: radial-gradient(circle at top right, #fff5ed 0%, #fcfcfc 100%);
+    min-height: 100vh;
+    padding: 2.5rem;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.headerSection {
+    margin-bottom: 3rem;
+    animation: fadeInDown 0.6s ease-out;
+}
+
+.dashboardTitle {
+    color: #ff8a3d;
+    font-size: 2.6rem;
+    font-weight: 900;
+    letter-spacing: -2px;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to bottom, #ff8a3d, #ff5e00);
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* 2. 통계 카드 - AiChat과 일관된 '알약/라운드' 입체감 */
+.statGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+}
+
+.statCard {
+    padding: 2.2rem 1.8rem;
+    border-radius: 35px !important; /* AiChat 카드와 동일한 라운딩 */
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 호버 시 강력한 피드백 */
+.statCard:hover {
+    transform: translateY(-12px);
+    border-color: rgba(255, 138, 61, 0.4) !important;
+    box-shadow: 0 25px 50px rgba(255, 138, 61, 0.12) !important;
+    background: #ffffff !important;
+}
+
+.statLabel {
+    color: #888;
+    font-size: 0.9rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    z-index: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.statValue {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #222;
+    margin-bottom: 0;
+    z-index: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    letter-spacing: -1px;
+}
+
+.statUnit {
+    font-size: 1.1rem;
+    color: #ff8a3d;
+    font-weight: 800;
+}
+
+/* 3. 컨텐츠 섹션 (테이블/차트 등) - AiChat과 병렬 배치 시 조화 고려 */
+.contentCard {
+    background: #ffffff !important;
+    border-radius: 35px !important; /* 일관성 있는 라운딩 */
+    border: none !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05) !important;
+    overflow: hidden;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.cardHeader {
+    padding: 1.8rem 2.2rem;
+    background-color: #ffffff;
+    border-bottom: 1px solid #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tableTitle {
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: #222;
+    letter-spacing: -0.5px;
+}
+
+/* 4. 테이블 커스터마이징 - 세련된 데이터 시각화 */
+.recentTable {
+    margin: 0;
+}
+
+.recentTable thead th {
+    background-color: #fcfcfc;
+    color: #aaa;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    padding: 1.4rem 2.2rem;
+    border: none;
+}
+
+.recentTable tbody td {
+    padding: 1.4rem 2.2rem;
+    vertical-align: middle;
+    font-weight: 600;
+    color: #444;
+    border-bottom: 1px solid #f8f9fa;
+    transition: all 0.2s;
+}
+
+.recentTable tbody tr:hover td {
+    background-color: #fffaf7;
+    color: #ff8a3d;
+    cursor: pointer;
+}
+
+/* 5. 반응형 보정 - AiChat이 옆에 붙을 때를 대비 */
+@media (max-width: 1200px) {
+    .statGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboardContainer { padding: 1.5rem; }
+    .statGrid { grid-template-columns: 1fr; }
+    .dashboardTitle { font-size: 2rem; }
+}
+
+/* 6. 애니메이션 & 스크롤바 */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.scrollContainer::-webkit-scrollbar {
+    width: 8px;
+}
+.scrollContainer::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #ff8a3d, #ff5e00);
+    border-radius: 10px;
+}
+.scrollContainer::-webkit-scrollbar-track {
+    background: #f8f9fa;
+}

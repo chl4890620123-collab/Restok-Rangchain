@@ -1,0 +1,71 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      cookie:
+        same-site: lax
+        path: /
+
+spring:
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3308/restock_db?characterEncoding=UTF-8
+    username: root
+    password: '1234'
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: "803654463829-36vkejdb57hgai7mttlls578e9f7ehl7.apps.googleusercontent.com"
+            client-secret: "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"
+            scope:
+              - profile
+              - email
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  mvc:
+    static-path-pattern: /uploads/**
+
+  web:
+    resources:
+      static-locations: "file:///C:/works/restock_images/"
+
+# ✅ 이 부분이 핵심입니다. 맨 왼쪽에 붙여넣으세요.
+app:
+  cors:
+    allowed-origins:
+       "http://localhost:3000"
+
+file:
+  upload-dir: "C:/works/restock_images/"
+
+ai:
+  google:
+    gemini:
+      api-key: "AIzaSyDr4hOz3X1BCnb4gj70pX1qNo9Guwdi5LM"
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+
+# 기존 설정들 아래에 추가
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG           # 웹 요청/응답 상세 로그
+    org.hibernate.SQL: DEBUG                 # 실행되는 SQL문 출력
+    org.hibernate.type.descriptor.sql: TRACE # SQL에 들어가는 파라미터 값 출력
+    # 본인의 프로젝트 패키지 경로 (예: com.example.restock)
+    com.example.restock: DEBUG

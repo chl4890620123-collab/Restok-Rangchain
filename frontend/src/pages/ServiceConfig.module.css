@@ -1,0 +1,174 @@
+/* src/pages/ServiceConfig.module.css */
+
+/* 1. 전체 컨테이너 - 쾌적한 여백과 배경 */
+.pageWrapper {
+    padding: 3rem 2rem;
+    background: radial-gradient(circle at top right, #fff5ed 0%, #fcfcfc 100%);
+    min-height: 100vh;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.headerSection {
+    margin-bottom: 2.5rem;
+    animation: fadeInDown 0.6s ease-out;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #ff8a3d;
+    letter-spacing: -1.5px;
+    text-shadow: 0 10px 20px rgba(255, 138, 61, 0.1);
+}
+
+/* 2. 상단 등록 카드 - 화이트 글래스모피즘 */
+.formCard {
+    border: none !important;
+    border-radius: 35px !important;
+    padding: 2.5rem !important;
+    margin-bottom: 2.5rem;
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+.formTitle {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #333;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 3. 입력 필드 - 세련된 소프트 쉐도우 */
+.inputField {
+    border-radius: 18px !important;
+    border: 2px solid #f1f3f5 !important;
+    background-color: #f8f9fa !important;
+    padding: 0.8rem 1.2rem !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.inputField:focus {
+    background-color: #fff !important;
+    border-color: #ff8a3d !important;
+    box-shadow: 0 10px 20px rgba(255, 138, 61, 0.1) !important;
+    transform: translateY(-2px);
+}
+
+/* 4. 등록 버튼 - 우리의 시그니처 버튼 */
+.addButton {
+    width: 100%;
+    border-radius: 20px !important;
+    border: none !important;
+    font-size: 1.1rem !important;
+    font-weight: 900 !important;
+    padding: 1rem 0 !important;
+    background: linear-gradient(135deg, #ff8a3d 0%, #ff5e00 100%) !important;
+    color: white !important;
+    box-shadow: 0 10px 20px rgba(255, 94, 0, 0.2) !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.addButton:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(255, 94, 0, 0.3) !important;
+    filter: brightness(1.1);
+}
+
+.addButton:active {
+    transform: scale(0.98);
+}
+
+/* 5. 하단 데이터 카드 - 깨끗하고 정교한 테이블 */
+.tableCard {
+    border: none !important;
+    border-radius: 35px !important;
+    overflow: hidden;
+    background-color: white !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04) !important;
+}
+
+.tableHeader {
+    background-color: #fcfcfc !important;
+    border-bottom: 2px solid #f1f3f5 !important;
+    color: #888 !important;
+    font-weight: 800 !important;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    height: 60px;
+}
+
+.tableRow {
+    height: 85px;
+    vertical-align: middle;
+    transition: background-color 0.2s;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.tableRow:hover {
+    background-color: #fffaf7;
+}
+
+/* 6. 배지 및 텍스트 스타일 */
+.typeBadge {
+    font-weight: 800 !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 12px !important;
+    background-color: #f1f3f5 !important;
+    color: #444 !important;
+    border: none !important;
+    font-size: 0.75rem !important;
+}
+
+.siteName {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #222;
+}
+
+.urlLink {
+    text-decoration: none;
+    color: #888;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.urlLink:hover {
+    color: #ff8a3d;
+}
+
+/* 7. 삭제 버튼 - 세련된 경고 액션 */
+.deleteButton {
+    border-radius: 12px !important;
+    border: none !important;
+    padding: 0.6rem 1.2rem !important;
+    font-weight: 800 !important;
+    background-color: #fff0f0 !important;
+    color: #ff4d4d !important;
+    transition: all 0.2s ease !important;
+}
+
+.deleteButton:hover {
+    background-color: #ff4d4d !important;
+    color: white !important;
+    transform: scale(1.05);
+}
+
+/* 애니메이션 */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 반응형 처리 */
+@media (max-width: 768px) {
+    .pageWrapper { padding: 1.5rem; }
+    .title { font-size: 1.8rem; }
+    .tableRow { height: auto; padding: 1rem 0; }
+}

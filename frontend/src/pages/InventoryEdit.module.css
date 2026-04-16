@@ -1,0 +1,131 @@
+/* src/pages/InventoryEdit.module.css */
+
+.inventoryContainer {
+    background-color: #f0f2f5;
+    min-height: 100vh;
+    padding: 3rem 1.5rem;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.nmCard {
+    background: #f0f2f5 !important;
+    border: none !important;
+    border-radius: 50px !important;
+    padding: 3rem !important;
+    box-shadow: 25px 25px 50px #d1d9e6, -25px -25px 50px #ffffff !important;
+    animation: zoomIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.3s ease;
+}
+
+.nmCardInset {
+    background: #f0f2f5;
+    border-radius: 30px;
+    box-shadow: inset 8px 8px 16px #d1d9e6, inset -8px -8px 16px #ffffff;
+    padding: 25px;
+    margin-bottom: 2rem;
+}
+
+.label {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #555;
+    margin-bottom: 0.8rem;
+    padding-left: 1rem;
+}
+
+.nmInput {
+    background: #f0f2f5 !important;
+    border: none !important;
+    border-radius: 20px !important;
+    padding: 1.1rem 1.5rem !important;
+    color: #333 !important;
+    font-weight: 600 !important;
+    box-shadow: inset 5px 5px 10px #d1d9e6, inset -5px -5px 10px #ffffff !important;
+    transition: all 0.3s ease !important;
+}
+
+.nmInput:focus {
+    box-shadow: inset 2px 2px 5px #d1d9e6, inset -2px -2px 5px #ffffff, 0 0 10px rgba(255, 138, 61, 0.2) !important;
+    background-color: #f8f9fa !important;
+}
+
+.nmBtnRound {
+    background: #f0f2f5 !important;
+    border: none !important;
+    border-radius: 15px !important;
+    min-width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem !important;
+    color: #ff8a3d !important;
+    box-shadow: 6px 6px 12px #d1d9e6, -6px -6px 12px #ffffff !important;
+    transition: all 0.2s ease !important;
+    padding: 0 15px;
+}
+
+.nmBtnRound:active {
+    box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff !important;
+    transform: translateY(2px);
+}
+
+.nmBtnMain {
+    background: linear-gradient(135deg, #ff8a3d, #ff5e00) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 25px !important;
+    padding: 1.2rem 0 !important;
+    font-size: 1.3rem !important;
+    font-weight: 900 !important;
+    box-shadow: 10px 10px 25px rgba(255, 94, 0, 0.25), -5px -5px 15px #ffffff !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.nmBtnMain:hover {
+    transform: translateY(-5px);
+    box-shadow: 15px 15px 35px rgba(255, 94, 0, 0.4) !important;
+    filter: brightness(1.1);
+}
+
+.nmBtnDelete {
+    background: #f0f2f5 !important;
+    border: none !important;
+    border-radius: 15px !important;
+    padding: 0.5rem 1.2rem !important;
+    color: #ff4d4d !important;
+    font-weight: 700 !important;
+    box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #ffffff !important;
+}
+
+.productImg3D {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border: 12px solid #f0f2f5;
+    border-radius: 35px;
+    box-shadow: 15px 15px 30px #d1d9e6, -15px -15px 30px #ffffff;
+    transition: transform 0.4s ease;
+}
+
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.backLink {
+    color: #888;
+    text-decoration: none;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+}
+
+.backLink:hover { color: #ff8a3d; }
+
+/* QR 캔버스 이미지 스타일 */
+#qr-preview canvas, img {
+    border-radius: 10px;
+}

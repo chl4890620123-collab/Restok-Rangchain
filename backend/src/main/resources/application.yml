@@ -1,0 +1,70 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      cookie:
+        same-site: lax
+        path: /
+
+spring:
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3308/restock_db?characterEncoding=UTF-8
+    username: root
+    password: '1234'
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            # 직접적인 키 대신 환경 변수 참조
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - profile
+              - email
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  mvc:
+    static-path-pattern: /uploads/**
+
+  web:
+    resources:
+      static-locations: "file:///C:/works/restock_images/"
+
+app:
+  cors:
+    allowed-origins:
+      "http://localhost:3000"
+
+file:
+  upload-dir: "C:/works/restock_images/"
+
+ai:
+  google:
+    gemini:
+      # 직접적인 키 대신 환경 변수 참조
+      api-key: ${GEMINI_API_KEY}
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+    com.example.restock: DEBUG

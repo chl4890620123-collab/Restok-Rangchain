@@ -1,0 +1,10 @@
+fastapi==0.109.2
+uvicorn==0.27.1
+pydantic==2.6.1
+# YAML 설정을 읽기 위한 라이브러리
+PyYAML==6.0.1
+# Gemini 2.0/2.5 연동을 위한 LangChain 라이브러리
+langchain-google-genai==1.0.1
+google-generativeai==0.4.1
+# 이미지 처리를 위한 기본 라이브러리
+python-multipart==0.0.9

@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.3'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.ai'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    // 사용자님의 JDK 21 환경 설정
+    sourceCompatibility = '21'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // 1. 스프링 부트 핵심 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // 2. ✅ OAuth2 로그인 기능을 위한 필수 라이브러리 (에러 해결 핵심!)
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    // 3. ✅ JWT 토큰 생성을 위한 라이브러리 (로그인 구현 필수)
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // 4. DB (MariaDB)
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+    // 5. Lombok (생산성 도구)
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // 6. 테스트 환경
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// 빌드 시 plain jar 생성을 방지하여 배포 편의성 향상
+jar {
+    enabled = false
+}

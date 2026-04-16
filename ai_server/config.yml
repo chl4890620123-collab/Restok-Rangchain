@@ -1,0 +1,9 @@
+server:
+  port: 8000
+  allowed-origin: "http://localhost:3000"
+
+ai:
+  google:
+    gemini:
+      #application.yml에 있는 키와 동일하게 관리
+      api-key: "AIzaSyDr4hOz3X1BCnb4gj70pX1qNo9Guwdi5LM"
