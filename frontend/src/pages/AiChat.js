@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Card, Button, Form, Spinner } from 'react-bootstrap';
-import styles from './AiChat.module.css'; // 위에서 만든 CSS 임포트
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || '';
+import api from '../api';
+import styles from './AiChat.module.css';
 
 const AiChat = () => {
     const [messages, setMessages] = useState([
-        { id: 1, sender: 'ai', text: '안녕하세요! 재고 관리 비서입니다. 궁금한 품목의 유통기한이나 수량을 물어보세요! 🥕' }
+        { id: 1, sender: 'ai', text: '안녕하세요! 보유 물품과 최근 처리 이력을 바탕으로 다음 행동을 함께 판단해드릴게요. 🥕' }
     ]);
     const [input, setInput] = useState('');
     const [isRecording, setIsRecording] = useState(false);
@@ -14,20 +13,18 @@ const AiChat = () => {
     const recognitionRef = useRef(null);
     const scrollRef = useRef(null);
 
-    // 자동 스크롤 로직 유지
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
     }, [messages, isLoading]);
 
-    // 음성 인식 설정 로직 유지
     useEffect(() => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
             const recognition = new SpeechRecognition();
             recognition.lang = 'ko-KR';
-            recognition.interimResults = true; 
+            recognition.interimResults = true;
             recognition.onresult = (e) => setInput(e.results[0][0].transcript);
             recognition.onerror = () => setIsRecording(false);
             recognition.onend = () => setIsRecording(false);
@@ -56,23 +53,17 @@ const AiChat = () => {
         setIsLoading(true);
 
         try {
-            const res = await fetch(`${API_BASE_URL}/api/chat/ask`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: msgText }),
-                credentials: 'include' 
-            });
-            const data = await res.json();
-            setMessages(prev => [...prev, { 
-                id: Date.now() + 1, 
-                sender: 'ai', 
-                text: data.reply || "죄송합니다. 응답을 생성하지 못했습니다." 
+            const res = await api.post('/api/chat/ask', { message: msgText });
+            setMessages(prev => [...prev, {
+                id: Date.now() + 1,
+                sender: 'ai',
+                text: res.data?.reply || '죄송합니다. 응답을 생성하지 못했습니다.'
             }]);
         } catch (error) {
-            setMessages(prev => [...prev, { 
-                id: Date.now() + 1, 
-                sender: 'ai', 
-                text: "🤖 서버와 연결할 수 없습니다. 백엔드를 확인해주세요!" 
+            setMessages(prev => [...prev, {
+                id: Date.now() + 1,
+                sender: 'ai',
+                text: error.response?.data?.reply || '🤖 서버와 연결할 수 없습니다. 백엔드와 API 키 설정을 확인해주세요.'
             }]);
         } finally {
             setIsLoading(false);
@@ -82,7 +73,7 @@ const AiChat = () => {
     return (
         <Card className={styles.chatCard}>
             <Card.Header className={styles.chatHeader}>
-                <h5 className={styles.headerTitle}> AI 재고 관리 비서</h5>
+                <h5 className={styles.headerTitle}>AI 물품 관리 보조</h5>
             </Card.Header>
 
             <Card.Body ref={scrollRef} className={styles.chatBody}>
@@ -103,17 +94,17 @@ const AiChat = () => {
             <Card.Footer className={styles.chatFooter}>
                 <Form onSubmit={handleSend}>
                     <div className={styles.inputGroup}>
-                        <Button 
-                            variant={isRecording ? 'danger' : 'light'} 
+                        <Button
+                            variant={isRecording ? 'danger' : 'light'}
                             onClick={toggleRecording}
                             className={styles.micBtn}
                         >
                             {isRecording ? '🛑' : '🎙️'}
                         </Button>
-                        <Form.Control 
-                            type="text" 
-                            placeholder={isRecording ? "듣고 있어요..." : "비서에게 질문하기..."} 
-                            value={input} 
+                        <Form.Control
+                            type="text"
+                            placeholder={isRecording ? '듣고 있어요...' : '예: 먼저 처리해야 할 물건이 뭐야?'}
+                            value={input}
                             onChange={(e) => setInput(e.target.value)}
                             className={styles.chatInput}
                         />
