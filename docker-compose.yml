@@ -7,6 +7,8 @@ services:
       MARIADB_USER: ${DB_USERNAME:-restok}
       MARIADB_PASSWORD: ${DB_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "127.0.0.1:${DB_PORT:-3308}:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
     healthcheck:
@@ -23,6 +25,8 @@ services:
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
       AI_MAX_IMAGE_BYTES: ${AI_MAX_IMAGE_BYTES:-10485760}
+    ports:
+      - "127.0.0.1:${AI_PORT:-8000}:8000"
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
       interval: 20s
