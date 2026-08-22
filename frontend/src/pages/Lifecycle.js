@@ -5,6 +5,7 @@ import api from '../api';
 import styles from './Lifecycle.module.css';
 
 const ACTION_LABELS = {
+    REGISTERED: '등록',
     USED: '사용 완료',
     SOLD: '판매',
     DONATED: '기부/나눔',
@@ -12,7 +13,8 @@ const ACTION_LABELS = {
     DISPOSED: '폐기',
     REPAIRED: '수리',
     TRANSFERRED: '이관',
-    AUTO_EXPIRED: '자동 처리'
+    AUTO_EXPIRED: '자동 처리',
+    REMOVED: '관리 삭제'
 };
 
 const Lifecycle = () => {
@@ -201,7 +203,7 @@ const Lifecycle = () => {
                             <div className="d-flex justify-content-between align-items-start gap-3 mb-3">
                                 <div>
                                     <h5 className={styles.cardTitle}>처리 기록</h5>
-                                    <p className={styles.cardDescription}>삭제된 데이터가 아니라 실제 사용 결과가 쌓이는 영역입니다.</p>
+                                    <p className={styles.cardDescription}>등록부터 사용·판매·기부·재활용·폐기까지 물품의 이력을 보존합니다.</p>
                                 </div>
                                 <Badge bg="light" text="dark" className="border rounded-pill px-3 py-2">완료 {completedCount}건</Badge>
                             </div>
