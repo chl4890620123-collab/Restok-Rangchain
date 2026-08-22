@@ -1,0 +1,28 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Java / Gradle
+.gradle/
+build/
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Node
+node_modules/
+frontend/build/
+
+# Runtime data
+data/
+uploads/
+*.log
