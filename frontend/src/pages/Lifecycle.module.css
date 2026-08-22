@@ -1,0 +1,262 @@
+.pageWrapper {
+    min-height: 100vh;
+    padding: 2.5rem;
+    background: radial-gradient(circle at top right, #fff5ed 0%, #fcfcfc 100%);
+    font-family: 'Pretendard', sans-serif;
+}
+
+.headerSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    animation: fadeInDown 0.6s ease-out;
+}
+
+.title {
+    margin: 0 0 0.45rem;
+    color: #ff8a3d;
+    font-size: 2.5rem;
+    font-weight: 900;
+    letter-spacing: -1.8px;
+}
+
+.subtitle {
+    margin: 0;
+    color: #888;
+    font-size: 0.98rem;
+    font-weight: 600;
+}
+
+.headerActions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.primaryButton {
+    border: none !important;
+    border-radius: 18px !important;
+    padding: 0.75rem 1.15rem !important;
+    background: linear-gradient(135deg, #ff8a3d 0%, #ff5e00 100%) !important;
+    color: #fff !important;
+    font-weight: 900 !important;
+    box-shadow: 0 10px 22px rgba(255, 94, 0, 0.2) !important;
+}
+
+.secondaryButton {
+    border-radius: 18px !important;
+    padding: 0.75rem 1.15rem !important;
+    border: 1px solid #ececec !important;
+    background: #fff !important;
+    color: #444 !important;
+    font-weight: 800 !important;
+}
+
+.statGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.statCard {
+    min-height: 135px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.045);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.statCard:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 42px rgba(255, 138, 61, 0.11);
+}
+
+.statLabel {
+    margin-bottom: 0.7rem;
+    color: #999;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+}
+
+.statValue {
+    color: #222;
+    font-size: 2.25rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.statValue span {
+    margin-left: 4px;
+    color: #ff8a3d;
+    font-size: 0.9rem;
+}
+
+.contentCard {
+    height: 100%;
+    border: none !important;
+    border-radius: 35px !important;
+    background: #fff !important;
+    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.05) !important;
+    overflow: hidden;
+}
+
+.cardBody {
+    padding: 1.7rem !important;
+}
+
+.cardTitle {
+    margin-bottom: 0.25rem;
+    color: #222;
+    font-size: 1.25rem;
+    font-weight: 900;
+}
+
+.cardDescription {
+    margin-bottom: 1.3rem;
+    color: #999;
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+.productList {
+    display: grid;
+    gap: 0.75rem;
+    max-height: 620px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.productButton {
+    width: 100%;
+    padding: 1rem 1.05rem !important;
+    border: 1px solid #f0f0f0 !important;
+    border-radius: 20px !important;
+    background: #fcfcfc !important;
+    color: #333 !important;
+    text-align: left !important;
+    transition: all 0.2s ease !important;
+}
+
+.productButton:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 138, 61, 0.35) !important;
+    background: #fffaf7 !important;
+    box-shadow: 0 10px 24px rgba(255, 138, 61, 0.08) !important;
+}
+
+.productName {
+    font-size: 0.98rem;
+    font-weight: 900;
+}
+
+.productMeta {
+    margin-top: 0.25rem;
+    color: #999;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.stockBadge {
+    padding: 0.5rem 0.7rem !important;
+    border-radius: 12px !important;
+    background: #222 !important;
+    font-weight: 800 !important;
+}
+
+.historyTable {
+    margin: 0 !important;
+}
+
+.historyTable thead th {
+    padding: 1rem 0.85rem !important;
+    border: none !important;
+    background: #fcfcfc !important;
+    color: #aaa !important;
+    font-size: 0.72rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.4px;
+}
+
+.historyTable tbody td {
+    padding: 1rem 0.85rem !important;
+    border-color: #f6f6f6 !important;
+    color: #555;
+    font-size: 0.84rem;
+    vertical-align: middle;
+}
+
+.historyTable tbody tr:hover td {
+    background: #fffaf7;
+}
+
+.actionBadge {
+    border-radius: 999px !important;
+    padding: 0.45rem 0.7rem !important;
+    background: #fff0e7 !important;
+    color: #ff6f0f !important;
+    font-weight: 900 !important;
+}
+
+.urlLink {
+    color: #ff7a25;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.urlLink:hover {
+    color: #ff5e00;
+}
+
+.emptyState {
+    padding: 3rem 1rem;
+    color: #aaa;
+    text-align: center;
+    font-weight: 700;
+}
+
+.modalHeader {
+    border-bottom: 1px solid #f4f4f4 !important;
+}
+
+.modalTitle {
+    font-weight: 900 !important;
+    letter-spacing: -0.5px;
+}
+
+.modalField :global(.form-control),
+.modalField :global(.form-select) {
+    border: 2px solid #f1f3f5 !important;
+    border-radius: 16px !important;
+    background: #f8f9fa !important;
+    padding: 0.72rem 0.9rem !important;
+}
+
+.modalField :global(.form-control:focus),
+.modalField :global(.form-select:focus) {
+    border-color: #ff8a3d !important;
+    background: #fff !important;
+    box-shadow: 0 8px 18px rgba(255, 138, 61, 0.1) !important;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-18px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1200px) {
+    .statGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 768px) {
+    .pageWrapper { padding: 1.4rem; }
+    .headerSection { align-items: flex-start; flex-direction: column; }
+    .title { font-size: 1.95rem; }
+    .statGrid { grid-template-columns: 1fr; }
+    .statCard { min-height: 115px; }
+}
