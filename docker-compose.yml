@@ -42,6 +42,8 @@ services:
       DB_URL: jdbc:mariadb://mariadb:3306/${DB_NAME:-restock_db}?characterEncoding=UTF-8
       DB_USERNAME: ${DB_USERNAME:-restok}
       DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       GEMINI_API_KEY: ${GEMINI_API_KEY}
