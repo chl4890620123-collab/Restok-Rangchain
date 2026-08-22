@@ -20,7 +20,7 @@ services:
       context: ./ai_server
     restart: unless-stopped
     environment:
-      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
       AI_MAX_IMAGE_BYTES: ${AI_MAX_IMAGE_BYTES:-10485760}
     healthcheck:
@@ -44,9 +44,10 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
-      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       AI_SERVICE_BASE_URL: http://ai-server:8000
       FILE_UPLOAD_DIR: /app/data/uploads/
       STATIC_FILE_LOCATION: file:/app/data/uploads/
@@ -60,6 +61,7 @@ services:
       context: ./frontend
       args:
         REACT_APP_API_URL: ""
+        REACT_APP_GOOGLE_OAUTH_ENABLED: ${REACT_APP_GOOGLE_OAUTH_ENABLED:-false}
     restart: unless-stopped
     depends_on:
       - backend
