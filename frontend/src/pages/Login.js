@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || '';
+const GOOGLE_OAUTH_ENABLED = process.env.REACT_APP_GOOGLE_OAUTH_ENABLED === 'true';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -81,20 +82,24 @@ const Login = () => {
                         로그인
                     </Button>
 
-                    <div className={styles.divider}>
-                        <div className={styles.line}></div>
-                        <span className="mx-3">소셜 로그인</span>
-                        <div className={styles.line}></div>
-                    </div>
+                    {GOOGLE_OAUTH_ENABLED && (
+                        <>
+                            <div className={styles.divider}>
+                                <div className={styles.line}></div>
+                                <span className="mx-3">소셜 로그인</span>
+                                <div className={styles.line}></div>
+                            </div>
 
-                    <Button
-                        type="button"
-                        className={`w-100 ${styles.socialBtn} d-flex align-items-center justify-content-center mb-4`}
-                        onClick={() => { window.location.href = `${API_BASE_URL}/oauth2/authorization/google`; }}
-                    >
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" width="18" className="me-2" />
-                        Google로 계속하기
-                    </Button>
+                            <Button
+                                type="button"
+                                className={`w-100 ${styles.socialBtn} d-flex align-items-center justify-content-center mb-4`}
+                                onClick={() => { window.location.href = `${API_BASE_URL}/oauth2/authorization/google`; }}
+                            >
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" width="18" className="me-2" />
+                                Google로 계속하기
+                            </Button>
+                        </>
+                    )}
                 </Form>
 
                 <div className="text-center pt-2">
