@@ -4,6 +4,12 @@ import { Container, Table, Form, Button, Card, Spinner, Row, Col, Alert } from '
 import api from '../api';
 import styles from './Inbound.module.css';
 
+const normalizeUrl = (rawUrl) => {
+    const value = (rawUrl || '').trim();
+    if (!value) return '';
+    return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+};
+
 const AiBatchInbound = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -47,7 +53,7 @@ const AiBatchInbound = () => {
 
         setIsSaving(true);
         try {
-            const effectiveUrl = selectedService?.url || customUrl.trim();
+            const effectiveUrl = selectedService?.url || normalizeUrl(customUrl);
             const finalItems = items.map(item => ({
                 name: item.name,
                 category: item.category || defaultCategory || '미분류',
