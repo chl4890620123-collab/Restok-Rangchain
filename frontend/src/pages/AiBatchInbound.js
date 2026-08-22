@@ -1,117 +1,172 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Container, Table, Form, Button, Card, Spinner } from 'react-bootstrap';
-import api from '../api'; // 스프링 부트(8080) 설정이 담긴 axios 인스턴스
-import styles from './Inbound.module.css'; // 기존 스타일 재활용
+import { Container, Table, Form, Button, Card, Spinner, Row, Col, Alert } from 'react-bootstrap';
+import api from '../api';
+import styles from './Inbound.module.css';
+
+const normalizeUrl = (rawUrl) => {
+    const value = (rawUrl || '').trim();
+    if (!value) return '';
+    return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+};
 
 const AiBatchInbound = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    
-    // Inbound.js에서 넘겨준 데이터 추출
-    const { scannedItems, sourceImage, defaultCategory, defaultLocation } = location.state || { scannedItems: [] };
-    
+
+    const {
+        scannedItems = [],
+        sourceImage,
+        defaultCategory,
+        defaultLocation,
+        defaultServiceId = '',
+        defaultCustomUrl = ''
+    } = location.state || {};
+
     const [items, setItems] = useState(scannedItems);
-    const [issaving, setIsSaving] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [services, setServices] = useState([]);
+    const [selectedServiceId, setSelectedServiceId] = useState(String(defaultServiceId || ''));
+    const [customUrl, setCustomUrl] = useState(defaultCustomUrl || '');
 
-    // 필드 수정 핸들러
+    useEffect(() => {
+        api.get('/api/services')
+            .then(res => setServices(Array.isArray(res.data) ? res.data : []))
+            .catch(err => console.error('URL 연결 목록 로드 실패:', err));
+    }, []);
+
+    const selectedService = useMemo(
+        () => services.find(service => String(service.id) === String(selectedServiceId)),
+        [services, selectedServiceId]
+    );
+
     const handleChange = (index, field, value) => {
-        const newItems = [...items];
-        newItems[index][field] = value;
-        setItems(newItems);
+        setItems(prev => prev.map((item, idx) => idx === index ? { ...item, [field]: value } : item));
     };
 
-    // 항목 삭제
     const handleRemove = (index) => {
-        setItems(items.filter((_, i) => i !== index));
+        setItems(prev => prev.filter((_, i) => i !== index));
     };
 
-    // 최종 저장 (스프링 부트로 전송)
     const handleFinalSubmit = async () => {
-        if (items.length === 0) return alert("입고할 품목이 없습니다.");
-        
+        if (items.length === 0) return alert('등록할 품목이 없습니다.');
+
         setIsSaving(true);
         try {
-            // 여러 개의 아이템을 저장하기 위해 반복문 또는 벌크 API 사용
-            // 여기서는 서버의 /api/inventory/with-image API를 각 아이템별로 호출하는 예시입니다.
-            // (서버에 벌크 입고 API가 있다면 그것을 사용하는 것이 더 좋습니다.)
-            for (const item of items) {
-                const sendData = new FormData();
-                
-                // 이미지 파일 (동일한 영수증 이미지 사용 또는 생략 가능)
-                if (sourceImage) {
-                    sendData.append("image", sourceImage);
-                }
+            const effectiveUrl = selectedService?.url || normalizeUrl(customUrl);
+            const finalItems = items.map(item => ({
+                name: item.name,
+                category: item.category || defaultCategory || '미분류',
+                location: item.location || defaultLocation || '',
+                stock: Math.max(1, Number(item.stock) || 1),
+                expiryDate: item.expiryDate || '',
+                referenceDate: new Date().toISOString().split('T')[0],
+                timeType: 'EXPIRATION',
+                status: '정상',
+                description: 'AI 영수증 스캔을 통해 등록됨',
+                serviceName: selectedService?.name || (effectiveUrl ? '직접 URL' : ''),
+                serviceType: selectedService?.type || (effectiveUrl ? '직접입력' : ''),
+                customUrl: effectiveUrl || '',
+                qrCodeData: `RS-AI-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+                autoDelete: false
+            }));
 
-                const finalData = {
-                    name: item.name,
-                    category: item.category || defaultCategory,
-                    location: defaultLocation,
-                    stock: item.stock || 1,
-                    expiryDate: item.expiryDate,
-                    timeType: 'EXPIRATION',
-                    status: '정상',
-                    description: 'AI 영수증 스캔을 통해 등록됨',
-                    qrCodeData: `RS-AI-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`
-                };
-
-                sendData.append("data", new Blob([JSON.stringify(finalData)], { type: "application/json" }));
-                
-                await api.post('/api/inventory/with-image', sendData);
+            const sendData = new FormData();
+            if (sourceImage) {
+                sendData.append('image', sourceImage);
             }
+            sendData.append('dataList', JSON.stringify(finalItems));
 
-            alert("모든 품목이 등록되었습니다!");
+            await api.post('/api/inventory/with-image-batch', sendData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            alert(`${finalItems.length}개 품목이 등록되었습니다.`);
             navigate('/inventory');
         } catch (err) {
-            console.error("저장 실패:", err);
-            alert("저장 중 오류가 발생했습니다.");
+            console.error('일괄 저장 실패:', err);
+            alert(err.response?.data?.message || '저장 중 오류가 발생했습니다.');
         } finally {
             setIsSaving(false);
         }
     };
 
     return (
-        <Container className="py-5">
-            <h2 className="mb-4 fw-bold">🧾 영수증 분석 결과 확인</h2>
-            <p className="text-muted">AI가 분석한 내용입니다. 정확하지 않은 정보는 수정 후 등록해주세요.</p>
+        <Container fluid className="py-4 px-4 px-lg-5">
+            <div className="mb-4">
+                <h2 className="fw-bold mb-1">🧾 영수증 분석 결과 확인</h2>
+                <p className="text-muted mb-0">AI 결과를 사람이 확인한 뒤 저장합니다. 처리할 외부 서비스 URL도 함께 연결할 수 있습니다.</p>
+            </div>
+
+            <Alert variant="light" className="border rounded-4 mb-4">
+                AI는 입력 시간을 줄이는 보조 수단입니다. 품목명·수량·기한이 실제 영수증과 맞는지 확인해주세요.
+            </Alert>
 
             <Card className="shadow-sm border-0 rounded-4 p-4 mb-4">
-                <Table responsive hover>
+                <h6 className="fw-bold mb-3">처리 서비스 연결</h6>
+                <Row className="g-3">
+                    <Col lg={5}>
+                        <Form.Select
+                            className="rounded-4 py-2"
+                            value={selectedServiceId}
+                            onChange={e => setSelectedServiceId(e.target.value)}
+                        >
+                            <option value="">직접 URL 입력 또는 연결 안 함</option>
+                            {services.map(service => (
+                                <option key={service.id} value={service.id}>[{service.type}] {service.name}</option>
+                            ))}
+                        </Form.Select>
+                    </Col>
+                    <Col lg={7}>
+                        <Form.Control
+                            className="rounded-4 py-2"
+                            placeholder="직접 연결 URL (https://...)"
+                            value={selectedService ? selectedService.url : customUrl}
+                            disabled={Boolean(selectedService)}
+                            onChange={e => setCustomUrl(e.target.value)}
+                        />
+                    </Col>
+                </Row>
+            </Card>
+
+            <Card className="shadow-sm border-0 rounded-4 p-4 mb-4">
+                <Table responsive hover className="align-middle mb-0">
                     <thead>
                         <tr>
                             <th>품목명</th>
                             <th>카테고리</th>
-                            <th>수량</th>
+                            <th style={{ width: '110px' }}>수량</th>
                             <th>유통기한</th>
-                            <th>삭제</th>
+                            <th style={{ width: '70px' }}>삭제</th>
                         </tr>
                     </thead>
                     <tbody>
                         {items.map((item, idx) => (
-                            <tr key={idx}>
+                            <tr key={`${item.name}-${idx}`}>
                                 <td>
-                                    <Form.Control 
-                                        value={item.name} 
+                                    <Form.Control
+                                        value={item.name || ''}
                                         onChange={(e) => handleChange(idx, 'name', e.target.value)}
                                     />
                                 </td>
                                 <td>
-                                    <Form.Control 
-                                        value={item.category} 
+                                    <Form.Control
+                                        value={item.category || defaultCategory || ''}
                                         onChange={(e) => handleChange(idx, 'category', e.target.value)}
                                     />
                                 </td>
-                                <td style={{ width: '100px' }}>
-                                    <Form.Control 
+                                <td>
+                                    <Form.Control
                                         type="number"
-                                        value={item.stock} 
+                                        min="1"
+                                        value={item.stock || 1}
                                         onChange={(e) => handleChange(idx, 'stock', e.target.value)}
                                     />
                                 </td>
                                 <td>
-                                    <Form.Control 
+                                    <Form.Control
                                         type="date"
-                                        value={item.expiryDate} 
+                                        value={item.expiryDate || ''}
                                         onChange={(e) => handleChange(idx, 'expiryDate', e.target.value)}
                                     />
                                 </td>
@@ -120,16 +175,23 @@ const AiBatchInbound = () => {
                                 </td>
                             </tr>
                         ))}
+                        {items.length === 0 && (
+                            <tr><td colSpan="5" className="text-center text-muted py-5">등록할 품목이 없습니다.</td></tr>
+                        )}
                     </tbody>
                 </Table>
             </Card>
 
             <div className="d-flex gap-3">
-                <Button variant="secondary" className="px-5 py-3 rounded-4 fw-bold" onClick={() => navigate(-1)}>
+                <Button variant="secondary" className="px-4 py-3 rounded-4 fw-bold" onClick={() => navigate(-1)}>
                     이전으로
                 </Button>
-                <Button variant="primary" className="flex-grow-1 py-3 rounded-4 fw-bold shadow" onClick={handleFinalSubmit} disabled={issaving}>
-                    {issaving ? <Spinner size="sm" /> : `${items.length}개 품목 일괄 등록하기`}
+                <Button
+                    className={`${styles.submitButton} flex-grow-1 py-3 rounded-4 fw-bold`}
+                    onClick={handleFinalSubmit}
+                    disabled={isSaving || items.length === 0}
+                >
+                    {isSaving ? <Spinner size="sm" /> : `${items.length}개 품목 일괄 등록`}
                 </Button>
             </div>
         </Container>

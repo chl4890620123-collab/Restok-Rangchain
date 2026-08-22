@@ -23,21 +23,21 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        // 구글에서 제공하는 정보 추출
         String email = oAuth2User.getAttribute("email");
         String googleName = oAuth2User.getAttribute("name");
 
-        log.info("🌐 구글 로그인 시도: {}", email);
+        if (email == null || email.isBlank()) {
+            throw new OAuth2AuthenticationException("Google 계정 이메일을 확인할 수 없습니다.");
+        }
 
-        // DB에 유저가 없으면 자동 회원가입 (이메일을 username으로 사용)
         userRepository.findByUsername(email)
                 .orElseGet(() -> {
-                    log.info("🆕 신규 구글 유저 등록: {}", email);
+                    log.info("신규 Google 사용자 등록: {}", email);
                     User newUser = User.builder()
                             .username(email)
-                            .password(null) // 소셜 로그인은 비밀번호 불필요
-                            .name(googleName) // 📍 이제 User 엔티티에 필드가 있어 에러가 나지 않습니다.
-                            .role("USER")
+                            .password(null)
+                            .name(googleName)
+                            .role("ROLE_USER")
                             .categories(new ArrayList<>())
                             .locations(new ArrayList<>())
                             .build();

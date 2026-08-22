@@ -27,6 +27,10 @@ public class LifecycleController {
             "USED", "SOLD", "DONATED", "RECYCLED", "DISPOSED", "REPAIRED", "TRANSFERRED", "AUTO_EXPIRED"
     );
 
+    private static final Set<String> STOCK_DECREASING_ACTIONS = Set.of(
+            "USED", "SOLD", "DONATED", "RECYCLED", "DISPOSED", "TRANSFERRED", "AUTO_EXPIRED"
+    );
+
     private final ProductRepository productRepository;
     private final ProductLifecycleEventRepository lifecycleEventRepository;
 
@@ -101,16 +105,20 @@ public class LifecycleController {
 
         ProductLifecycleEvent savedEvent = lifecycleEventRepository.save(event);
 
-        int remaining = product.getStock() - request.getQuantity();
-        product.setStock(remaining);
-        if (remaining == 0) {
-            product.setStatus("처리완료");
+        int remaining = product.getStock();
+        if (STOCK_DECREASING_ACTIONS.contains(action)) {
+            remaining = product.getStock() - request.getQuantity();
+            product.setStock(remaining);
+            if (remaining == 0) {
+                product.setStatus("처리완료");
+            }
+            productRepository.save(product);
         }
-        productRepository.save(product);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "event", savedEvent,
-                "remainingStock", remaining
+                "remainingStock", remaining,
+                "stockChanged", STOCK_DECREASING_ACTIONS.contains(action)
         ));
     }
 
