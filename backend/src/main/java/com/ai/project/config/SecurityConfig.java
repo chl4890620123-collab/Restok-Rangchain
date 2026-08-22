@@ -1,5 +1,6 @@
 package com.ai.project.config;
 
+import com.ai.project.service.CustomOAuth2UserService;
 import com.ai.project.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtUtil jwtUtil;
+    private final CustomOAuth2UserService customOAuth2UserService;
     private final ObjectProvider<ClientRegistrationRepository> clientRegistrationRepositoryProvider;
 
     @Value("${app.cors.allowed-origins}")
@@ -67,6 +69,7 @@ public class SecurityConfig {
 
         if (clientRegistrationRepositoryProvider.getIfAvailable() != null) {
             http.oauth2Login(oauth2 -> oauth2
+                    .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                     .successHandler((request, response, authentication) -> {
                         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
                         String email = oAuth2User.getAttribute("email");
