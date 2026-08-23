@@ -1,16 +1,31 @@
-name: Restok CI
+name: CI
 
 on:
   push:
-    branches:
-      - main
-      - fix/**
-      - feat/**
+    branches: [main]
   pull_request:
-    branches:
-      - main
+
+permissions:
+  contents: read
 
 jobs:
+  text-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate UTF-8, JSON and tracked artifacts
+        run: |
+          python scripts/check_text_integrity.py
+          ignored="$(git ls-files -ci --exclude-standard)"
+          if [ -n "$ignored" ]; then
+            echo "Tracked files are ignored by .gitignore:"
+            echo "$ignored"
+            exit 1
+          fi
+
   backend:
     runs-on: ubuntu-latest
     defaults:
@@ -21,10 +36,13 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: '17'
           cache: gradle
-      - run: chmod +x gradlew
-      - run: ./gradlew compileJava --no-daemon
+          cache-dependency-path: backend/**/*.gradle*
+      - name: Compile backend
+        run: |
+          chmod +x gradlew
+          ./gradlew clean test --no-daemon
 
   frontend:
     runs-on: ubuntu-latest
@@ -40,20 +58,41 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run build
-        env:
-          CI: 'false'
 
-  ai-and-compose:
+  ai:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai_server
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - run: python -m py_compile ai_server/main.py
-      - run: docker compose config >/dev/null
+          python-version: '3.11'
+      - name: Install AI dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Compile and import AI service
+        run: |
+          python -m compileall -q .
+          python -c "import fastapi, requests, uvicorn; import main"
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Compose
         env:
-          DB_PASSWORD: test_password
-          DB_ROOT_PASSWORD: test_root_password
-          JWT_SECRET: ci_only_secret_at_least_32_bytes_long_123456
-          GEMINI_API_KEY: ''
+          DB_PASSWORD: ci-db-password
+          DB_ROOT_PASSWORD: ci-root-password
+          JWT_SECRET: ci-jwt-secret-that-is-at-least-32-bytes-long
+          AI_SECURE_TOKEN: ci-ai-secure-token
+        run: docker compose config >/dev/null
+      - name: Build all service images
+        env:
+          DB_PASSWORD: ci-db-password
+          DB_ROOT_PASSWORD: ci-root-password
+          JWT_SECRET: ci-jwt-secret-that-is-at-least-32-bytes-long
+          AI_SECURE_TOKEN: ci-ai-secure-token
+        run: docker compose build
