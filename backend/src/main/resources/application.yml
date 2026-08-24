@@ -40,6 +40,10 @@ app:
   jwt:
     secret: ${JWT_SECRET}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+  database:
+    charset-migration:
+      enabled: ${DB_CHARSET_MIGRATION_ENABLED:false}
+      lock-wait-seconds: ${DB_CHARSET_MIGRATION_LOCK_WAIT_SECONDS:10}
 
 file:
   upload-dir: ${FILE_UPLOAD_DIR:./data/uploads/}
