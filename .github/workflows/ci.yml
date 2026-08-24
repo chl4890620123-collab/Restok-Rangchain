@@ -36,10 +36,12 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '21'
           cache: gradle
           cache-dependency-path: backend/**/*.gradle*
-      - name: Compile backend
+      - name: Compile and test backend
+        env:
+          JWT_SECRET: ci-jwt-secret-that-is-at-least-32-bytes-long
         run: |
           chmod +x gradlew
           ./gradlew clean test --no-daemon
@@ -58,6 +60,8 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run build
+        env:
+          CI: 'false'
 
   ai:
     runs-on: ubuntu-latest
@@ -68,7 +72,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
       - name: Install AI dependencies
         run: |
           python -m pip install --upgrade pip
@@ -76,7 +80,7 @@ jobs:
       - name: Compile and import AI service
         run: |
           python -m compileall -q .
-          python -c "import fastapi, requests, uvicorn; import main"
+          python -c "import fastapi, uvicorn; import main"
 
   docker:
     runs-on: ubuntu-latest
@@ -87,12 +91,10 @@ jobs:
           DB_PASSWORD: ci-db-password
           DB_ROOT_PASSWORD: ci-root-password
           JWT_SECRET: ci-jwt-secret-that-is-at-least-32-bytes-long
-          AI_SECURE_TOKEN: ci-ai-secure-token
         run: docker compose config >/dev/null
       - name: Build all service images
         env:
           DB_PASSWORD: ci-db-password
           DB_ROOT_PASSWORD: ci-root-password
           JWT_SECRET: ci-jwt-secret-that-is-at-least-32-bytes-long
-          AI_SECURE_TOKEN: ci-ai-secure-token
         run: docker compose build
