@@ -48,8 +48,6 @@ AI가 보유 데이터 + 처리 이력 기반 판단 보조
 
 ## Demo Flow
 
-로컬 시연은 다음 순서가 가장 자연스럽습니다.
-
 1. `URL 연결 관리`에서 사용자가 실제 쓰는 판매/기부/재활용/폐기 사이트 등록
 2. `신규 등록`에서 직접 입력 또는 영수증 AI 분석으로 물품 등록
 3. `대시보드`에서 임박/처리 필요 물품 확인
@@ -80,11 +78,11 @@ FastAPI AI Service
 Gemini
 ```
 
-기존 화면의 AI 호출은 공통 axios 호환 레이어에서 Spring AI Gateway로 전환됩니다. 영수증 이미지는 `React → Spring Boot → FastAPI → Gemini` 경로를 사용하므로 Docker 또는 미니PC 배포에서 브라우저의 `localhost:8000` 직접 연결 문제를 피합니다.
+영수증 이미지는 브라우저가 FastAPI를 직접 호출하지 않고 `React → Spring Boot → FastAPI → Gemini` 경로를 사용합니다. 따라서 Docker/미니PC 배포에서도 브라우저의 `localhost:8000` 직접 연결에 의존하지 않습니다.
 
 ## 주요 기능
 
-- 회원가입 / 로그인 / Google OAuth / JWT
+- 회원가입 / 로그인 / 선택적 Google OAuth / JWT
 - 사용자별 카테고리와 보관 위치
 - 사진/카메라 기반 물품 등록
 - 영수증 이미지 AI 분석 및 다중 품목 등록
@@ -97,33 +95,60 @@ Gemini
 
 ## UI 방향
 
-기존 Restok 프론트의 디자인 언어를 그대로 유지합니다.
-
 - Primary accent: `#ff8a3d`
 - 밝은 radial gradient 배경
 - 30~35px 라운드 카드
 - 카드 기반 상태 요약 + 테이블 기반 상세 데이터
 - 데스크톱 대시보드 중심, 모바일에서는 카드가 세로로 재배치
 
-새 `처리·생애주기` 화면도 동일한 디자인 시스템을 사용합니다.
-
-## Local / Mini PC deployment
-
-1. 환경 파일 생성
+## Local development
 
 ```bash
 cp .env.example .env
-```
-
-2. `.env`에 DB 비밀번호와 필요한 API/OAuth 키를 입력합니다.
-
-3. 전체 서비스 실행
-
-```bash
 docker compose up -d --build
 ```
 
-4. 기본 웹 포트는 `80`입니다. 미니PC에서는 공유기 포트포워딩과 도메인/HTTPS Reverse Proxy 설정에 맞게 `WEB_PORT`와 `APP_CORS_ALLOWED_ORIGINS`를 변경합니다.
+기본 로컬 웹 주소는 `http://127.0.0.1:18081`입니다. DB/AI는 Docker 내부 네트워크에 두고 프론트엔드만 loopback 포트로 노출합니다.
+
+## Mini PC production deployment
+
+실제 미니PC 운영은 이 저장소가 직접 80/443을 점유하거나 MOVE-AI 같은 다른 프로젝트의 프록시에 의존하지 않습니다.
+
+```text
+Restok-Rangchain
+  = 앱 코드 + Dockerfile + 앱 CI
+
+chl4890620123-collab/Server
+  = Windows self-hosted runner
+  = Restok 운영 Compose
+  = Caddy
+  = DB/업로드 영속 데이터
+  = 배포 전 DB 백업
+  = 공개 HTTPS 검수 URL
+```
+
+Server 저장소의 Restok 배포는 호스트 `127.0.0.1:9050`만 사용하므로 기존 80/443 서비스와 충돌하지 않습니다. 공개 검수는 별도의 HTTPS tunnel을 사용합니다.
+
+운영 데이터는 앱 소스와 분리합니다.
+
+```text
+D:\server-data\restok\runtime\.env
+D:\server-data\restok\mariadb
+D:\server-data\restok\uploads
+D:\server-data\restok\backups
+```
+
+`main`이 변경되면 Server self-hosted runner가 최신 SHA를 확인해 새 버전일 때만 재배포합니다.
+
+## Database charset migration
+
+MariaDB의 기본 charset은 Compose에서 `utf8mb4`로 설정합니다. 기존 테이블을 `ALTER TABLE ... CONVERT`하는 마이그레이션은 잠금이 발생할 수 있으므로 앱 시작 시 자동 실행하지 않습니다.
+
+```dotenv
+DB_CHARSET_MIGRATION_ENABLED=false
+```
+
+유지보수 시간에 명시적으로 `true`로 바꾼 경우에만 실행됩니다. 변환 시 `FOREIGN_KEY_CHECKS` 변경과 ALTER 문은 동일 DB connection에서 실행됩니다.
 
 ## Security / configuration notes
 
@@ -131,6 +156,7 @@ docker compose up -d --build
 - DB 연결정보, 업로드 경로, CORS, AI 서비스 주소는 환경변수로 분리합니다.
 - Lifecycle API는 로그인 사용자 소유 물품만 처리할 수 있습니다.
 - URL Connector는 사용자가 선택한 외부 목적지이며, API와 동일한 기능으로 취급하지 않습니다.
+- Gemini 키가 없어도 로그인, URL 연결, 물품, Lifecycle 기능은 동작하고 AI 기능만 제한됩니다.
 
 ## Next roadmap
 
