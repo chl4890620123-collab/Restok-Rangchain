@@ -29,7 +29,7 @@ public class DatabaseCharsetMigration implements CommandLineRunner {
 
     public DatabaseCharsetMigration(
             DataSource dataSource,
-            @Value("${app.database.charset-migration.enabled:true}") boolean enabled,
+            @Value("${app.database.charset-migration.enabled:false}") boolean enabled,
             @Value("${app.database.charset-migration.lock-wait-seconds:10}") int lockWaitSeconds
     ) {
         this.dataSource = dataSource;
