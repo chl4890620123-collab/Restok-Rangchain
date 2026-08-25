@@ -1,14 +1,19 @@
 package com.ai.project.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 /**
- * [표준 아키텍처] 로그인 요청 데이터 전송 객체 (DTO)
- * 프론트엔드에서 날아오는 JSON 요청을 그대로 매핑
+ * 로그인 요청 데이터 전송 객체.
  */
 @Data
 public class LoginRequest {
-    // 추후 유효성 검사 @NotBlank 부착
+    @NotBlank(message = "아이디를 입력하세요.")
+    @Size(max = 100, message = "아이디가 너무 깁니다.")
     private String username;
+
+    @NotBlank(message = "비밀번호를 입력하세요.")
+    @Size(max = 72, message = "비밀번호가 너무 깁니다.")
     private String password;
 }

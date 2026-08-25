@@ -3,6 +3,7 @@ package com.ai.project.controller;
 import com.ai.project.dto.LoginRequest;
 import com.ai.project.dto.SignupRequest;
 import com.ai.project.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             String jwtToken = authService.authenticate(loginRequest);
             return ResponseEntity.ok(Map.of(
@@ -36,7 +37,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequest signupRequest) {
         try {
             authService.registerUser(signupRequest);
             return ResponseEntity.ok(Map.of("message", "회원가입이 성공적으로 완료되었습니다."));
