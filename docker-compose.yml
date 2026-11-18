@@ -36,7 +36,8 @@ services:
     security_opt:
       - no-new-privileges:true
     cap_drop:
-      - ALL    depends_on:
+      - ALL
+    depends_on:
       mariadb:
         condition: service_healthy
       ai:
